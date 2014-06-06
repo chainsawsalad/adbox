@@ -48,4 +48,11 @@ class mysql
     command => "/usr/bin/mysql -uroot -p$mysqlPassword -e 'grant all on *.* to `root`@`localstats.nanigans.com`;'",
     require => [Service["mysql"], Exec["set-mysql-password"]]
   }
+
+  exec
+  {
+    "set-mysql-password-localstats":
+    command => "/usr/bin/mysql -uroot -p$mysqlPassword -e 'set password for `root`@`localstats.nanigans.com` = password(\"$mysqlPassword\");'",
+    require => [Service["mysql"], Exec["set-mysql-password"], Exec["grant-default-db-host-name"]]
+  }
 }
