@@ -32,7 +32,7 @@ Listen 9000
 <VirtualHost *:8001>
     ServerAdmin webmaster@localhost
     DocumentRoot /var/www/portal/www
-    ProxyPass /mobilertb http://tinbox.nanigans.com/mobilertb retry=0
+    ProxyPass /tinman http://tinbox.nanigans.com/tinman retry=0
     <Directory />
         Options FollowSymLinks
         Order allow,deny
