@@ -3,3 +3,4 @@ vagrant
 .idea
 www
 .DS_Store
+settings.yml
