@@ -1,8 +1,19 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
+require 'yaml'
 
 Vagrant.configure("2") do |config|
   config.vm.define :adbox do |ae_config|
+
+    settings = {
+      'src_folder' => "../../src/nanigans",
+      'hostname' => "adbox.nanigans.com"
+    }
+
+    custom_settings = File.exists?('settings.yml') ? YAML.load_file('settings.yml') : {}
+
+    settings.merge!(custom_settings)
+
     ae_config.vm.box = "lucid32"
     ae_config.vm.box_url = "http://files.vagrantup.com/lucid32.box"
     ae_config.ssh.forward_agent = true
@@ -16,8 +27,8 @@ Vagrant.configure("2") do |config|
     ae_config.vm.network :forwarded_port, guest: 5432, host: 5434, auto_correct: true
     # livereload port
     ae_config.vm.network :forwarded_port, guest: 35729, host: 35729, auto_correct: true
-    ae_config.vm.hostname = "adbox.nanigans.com"
-    ae_config.vm.synced_folder "../../src/nanigans", "/var/www", {:mount_options => ['dmode=777','fmode=777']}
+    ae_config.vm.hostname = settings['hostname']
+    ae_config.vm.synced_folder settings['src_folder'], "/var/www", {:mount_options => ['dmode=777','fmode=777']}
 
     ae_config.vm.provider :virtualbox do |v|
       v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
