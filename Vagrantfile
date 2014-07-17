@@ -2,8 +2,13 @@
 # vi: set ft=ruby :
 require 'yaml'
 
-Vagrant.configure("2") do |config|
-  config.vm.define :adbox do |ae_config|
+# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+  # this line causes the VM to be named.
+  config.vm.define :adbox do |adbox|
 
     settings = {
       'src_folder' => "../../src/nanigans",
@@ -14,36 +19,31 @@ Vagrant.configure("2") do |config|
 
     settings.merge!(custom_settings)
 
-    ae_config.vm.box = "lucid32"
-    ae_config.vm.box_url = "http://files.vagrantup.com/lucid32.box"
-    ae_config.ssh.forward_agent = true
+    adbox.vm.box = "lucid64"
+    adbox.vm.box_url = "http://files.vagrantup.com/lucid64.box"
+    adbox.ssh.forward_agent = true
+    adbox.vm.network "private_network", ip: "192.168.56.101"
+    adbox.vm.hostname = settings['hostname']
+    adbox.vm.synced_folder settings['src_folder'], "/var/www", {:mount_options => ['dmode=777','fmode=777']}
 
-    # This will give the machine a static IP uncomment to enable
-    ae_config.vm.network :private_network, ip: "192.168.56.101"
+    # Ports
+    adbox.vm.network :forwarded_port, guest: 3306, host: 8890, auto_correct: true
+    adbox.vm.network :forwarded_port, guest: 5432, host: 5434, auto_correct: true
+    adbox.vm.network :forwarded_port, guest: 35729, host: 35729, auto_correct: true # livereload port
 
-    # Forward guest port 80 to host port 8888 and name mapping
-    #ae_config.vm.network :forwarded_port, guest: 80, host: 8888
-    ae_config.vm.network :forwarded_port, guest: 3306, host: 8890, auto_correct: true
-    ae_config.vm.network :forwarded_port, guest: 5432, host: 5434, auto_correct: true
-    # livereload port
-    ae_config.vm.network :forwarded_port, guest: 35729, host: 35729, auto_correct: true
-    ae_config.vm.hostname = settings['hostname']
-    ae_config.vm.synced_folder settings['src_folder'], "/var/www", {:mount_options => ['dmode=777','fmode=777']}
-
-    ae_config.vm.provider :virtualbox do |v|
+    adbox.vm.provider :virtualbox do |v|
       v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
       v.customize ["modifyvm", :id, "--memory", "512"]
     end
 
-    # Enable the Puppet provisioner, with will look in manifests
-    ae_config.vm.provision :puppet do |puppet|
+    adbox.vm.provision "puppet" do |puppet|
       puppet.manifests_path = "manifests"
       puppet.manifest_file = "default.pp"
       puppet.module_path = "modules"
       #puppet.options = "--verbose --debug"
     end
 
-    ae_config.vm.provision :shell, :path => "scripts/enable_remote_mysql_access.sh"
+    adbox.vm.provision :shell, :path => "scripts/enable_remote_mysql_access.sh"
   end
 end
 
