@@ -2,7 +2,6 @@ class php {
 
   # package install list
   $packages = [
-    "php5",
     "php5-cli",
     "php5-mysql",
     "php-pear",
@@ -15,6 +14,11 @@ class php {
     "php5-memcache",
     "php5-memcached"
   ]
+  
+  package { "php5":
+    ensure => "5.3.2-1ubuntu4.26",
+    require => Exec["apt-get update"]
+  }
 
   package { $packages:
     ensure => present,
