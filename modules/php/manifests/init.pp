@@ -3,7 +3,6 @@ class php {
   # package install list
   $packages = [
     "make",
-    "php5",
     "php5-cli",
     "php5-mysql",
     "php-pear",
