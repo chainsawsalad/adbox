@@ -33,7 +33,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     adbox.vm.provider :virtualbox do |v|
       v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
-      v.customize ["modifyvm", :id, "--memory", "512"]
+      v.customize ["modifyvm", :id, "--memory", "1024"]
     end
 
     adbox.vm.provision "puppet" do |puppet|
@@ -44,6 +44,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
 
     adbox.vm.provision :shell, :path => "scripts/enable_remote_mysql_access.sh"
+
+    adbox.vm.provision :shell, :inline => "mkdir /adplan_cache"
+    adbox.vm.provision :shell, :inline => "chmod -R 777 /adplan_cache"
   end
 end
 
