@@ -10,6 +10,7 @@ Exec {
 $environmentFile = file('/etc/environment')
 $nanigansVars = 'SVNROOT=/var/www
 XDEBUG_CONFIG="remote_enable=1 remote_port=9001 remote_autostart=1 remote_connect_back=1 idekey=nanigans-xdebug remote_host=192.168.56.1 remote_log=/var/log/xdebug.log"
+SVNUSER=adbox
 PHP_IDE_CONFIG="serverName=AdboxCentral"'
 
 file { "/etc/environment":
