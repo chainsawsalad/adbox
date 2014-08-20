@@ -6,6 +6,16 @@ Exec {
   path => ["/usr/bin", "/bin", "/usr/sbin", "/sbin", "/usr/local/bin", "/usr/local/sbin"]
 }
 
+# setting these environment variables allows for PhpStorm debugging with CL PHP scripts
+$environmentFile = file('/etc/environment')
+$nanigansVars = 'SVNROOT=/var/www
+XDEBUG_CONFIG="remote_enable=1 remote_port=9001 remote_autostart=1 remote_connect_back=1 idekey=nanigans-xdebug remote_host=192.168.56.1 remote_log=/var/log/xdebug.log"
+PHP_IDE_CONFIG="serverName=AdboxCentral"'
+
+file { "/etc/environment":
+  content => inline_template("<%= @environmentFile %><%= @nanigansVars %>")
+}
+
 # create a simple hostname and ip host entry
 host { 'tinbox.nanigans.com':
   ip => '192.168.56.102',
