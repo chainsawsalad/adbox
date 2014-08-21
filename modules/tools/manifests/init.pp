@@ -3,8 +3,10 @@ class tools {
   # package install list
   $packages = [
     "curl",
-    "vim",
-    "htop"
+    "emacs",
+    "git-core",
+    "htop",
+    "vim"
   ]
 
   # install packages
