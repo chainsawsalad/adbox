@@ -17,7 +17,7 @@ class php {
   ]
 
   package { "php5":
-    ensure => "5.3.2-1ubuntu4.26",
+    ensure => "5.3.2-1ubuntu4.27",
     require => Exec["apt-get update"]
   }
 
