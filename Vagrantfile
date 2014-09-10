@@ -47,6 +47,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     adbox.vm.provision :shell, :inline => "mkdir /adplan_cache"
     adbox.vm.provision :shell, :inline => "chmod -R 777 /adplan_cache"
+
+    adbox.vm.provision :shell, :inline => "mkdir /var/log/nanigans"
+    adbox.vm.provision :shell, :inline => "chmod -R 777 /var/log/nanigans"
   end
 end
 
